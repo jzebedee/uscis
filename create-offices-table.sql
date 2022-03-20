@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS offices(
+    code TEXT PRIMARY KEY,
+    description TEXT
+) WITHOUT ROWID;
