@@ -35,5 +35,5 @@ jobs:
         with:
           name: ${{ needs.build_db.outputs.dbname }}
           tag_name: ${{ needs.build_db.outputs.dbname }}
-          files: '*.db'
+          files: 'uscis-db/*.db'
           fail_on_unmatched_files: true
