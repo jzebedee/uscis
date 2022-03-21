@@ -34,4 +34,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ needs.build_db.outputs.dbname }}
+          tag_name: ${{ needs.build_db.outputs.dbname }}
           files: '*.db'
+          fail_on_unmatched_files: true
