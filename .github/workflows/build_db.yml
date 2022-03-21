@@ -7,8 +7,31 @@ on:
 jobs:
   build_db:
     runs-on: ubuntu-latest
+    outputs:
+      dbname: ${{ steps.dbname.outputs.dbname }}
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: brew install sqlite3
-    - run: ./build_db.sh
+    - name: Build DB
+      run: ./build_db.sh
+    - name: Get DB name
+      id: dbname
+      run: echo ::set-output name=dbname::"$(basename *.db .db)"
+    - name: Upload DB
+      uses: actions/upload-artifact@v3
+      with:
+        name: uscis-db
+        path: '*.db'
+        if-no-files-found: error
+  publish_db:
+    runs-on: ubuntu-latest
+    needs: build_db
+    steps:
+      - name: Download DB
+        uses: actions/download-artifact@v3
+      - name: Create daily release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ needs.build_db.outputs.dbname }}
+          files: '*.db'
