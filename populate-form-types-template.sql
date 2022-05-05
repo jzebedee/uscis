@@ -1,0 +1,17 @@
+WITH response_types_json AS (
+  SELECT
+    json_each.value
+  FROM(
+    (SELECT json(readfile('%s')) -> '$.data.form_types.subtypes' AS types)
+  ), json_each(types)
+), response_types AS (
+  SELECT
+    (value ->> '$.form_key') AS form_key,
+    (value ->> '$.form_type') AS form_type,
+    (value ->> '$.form_type_description_en') AS form_type_description_en,
+    (value ->> '$.form_type_description_es') AS form_type_description_es
+  FROM response_types_json
+)
+
+INSERT INTO form_types
+SELECT * FROM response_types;
