@@ -17,6 +17,7 @@ set -euxo pipefail
 ./populate_metadata.sh
 
 # create json response artifact
-sqlar responses.db *.json
+sqlite3 responses.db -A -c *.json
 
+# rename to current date
 mv uscis.db "$(date +"%F").db"
