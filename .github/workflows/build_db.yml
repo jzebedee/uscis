@@ -24,6 +24,9 @@ jobs:
         name: uscis-db
         path: '${{ steps.dbname.outputs.dbname }}.db'
         if-no-files-found: error
+    - name: Build JSON DB
+      if: always()
+      run: sqlite3 responses.db -A -c *.json
     - name: Upload JSON DB
       uses: actions/upload-artifact@v3
       if: always()

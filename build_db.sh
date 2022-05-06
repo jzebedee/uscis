@@ -16,8 +16,5 @@ set -euxo pipefail
 # must be last for selftest checksums
 ./populate_metadata.sh
 
-# create json response artifact
-sqlite3 responses.db -A -c *.json
-
 # rename to current date
 mv uscis.db "$(date +"%F").db"
