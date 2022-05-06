@@ -12,4 +12,4 @@ json_file="response-form-offices_${form}_${type}.json"
 printf "$(cat populate-offices-table-template.sql)" "$json_file" | sqlite3 uscis.db
 
 # Fill out the offices column on this form
-#printf "$(cat populate-form-types-offices-template.sql)" "$json_file" | sqlite3 uscis.db
+printf "$(cat populate-form-types-offices-template.sql)" "$json_file" | sqlite3 uscis.db
