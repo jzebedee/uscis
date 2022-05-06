@@ -14,4 +14,4 @@ WITH response_types_json AS (
 )
 
 INSERT OR IGNORE INTO form_types
-SELECT '%s', * FROM response_types;
+SELECT '%s', *, json('[]') FROM response_types;
