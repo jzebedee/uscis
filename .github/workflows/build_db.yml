@@ -22,7 +22,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: uscis-db
-        path: '${{ outputs.dbname }}.db'
+        path: '${{ steps.dbname.outputs.dbname }}.db'
         if-no-files-found: error
     - name: Upload JSON DB
       uses: actions/upload-artifact@v3
