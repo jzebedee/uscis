@@ -1,6 +1,4 @@
 #!/bin/bash
 set -euxo pipefail
 
-form=$1
-
-curl -s -S "https://egov.uscis.gov/processing-times/api/formtypes/$form" -H 'Referer: https://egov.uscis.gov/processing-times/'
+sqlite3 uscis.db < query-form-types-urls.sql | xargs -t curl -s -S -H 'Referer: https://egov.uscis.gov/processing-times/'
