@@ -22,7 +22,17 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: uscis-db
-        path: '*.db'
+        path: '${{ steps.dbname.outputs.dbname }}.db'
+        if-no-files-found: error
+    - name: Build JSON DB
+      if: always()
+      run: sqlite3 responses.db -A -c *.json
+    - name: Upload JSON DB
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: responses-db
+        path: 'responses.db'
         if-no-files-found: error
   publish_db:
     runs-on: ubuntu-latest
