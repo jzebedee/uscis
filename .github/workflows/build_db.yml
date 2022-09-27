@@ -11,8 +11,6 @@ jobs:
       dbname: ${{ steps.dbname.outputs.dbname }}
     steps:
     - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: brew install sqlite3
     - name: Build DB
       run: ./build_db.sh
     - name: Get DB name
