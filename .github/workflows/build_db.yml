@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      run: brew install sqlite3
+      run: ./setup.sh
     - name: Build DB
       run: ./build_db.sh
     - name: Get DB name
