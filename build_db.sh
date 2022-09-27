@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euxo pipefail
 
+# install dependencies
+./setup.sh
+
 # forms
 ./populate_forms.sh
 
