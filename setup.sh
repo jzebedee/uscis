@@ -2,7 +2,13 @@
 set -euxo pipefail
 
 test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-# don't fail on warnings about GH hosted runners having unbrewed headers
-brew doctor || true
-
 brew update && brew install sqlite3
+
+# make sure I'm not going insane
+sqlite3 --version
+sqlite --version
+
+/usr/local/bin/sqlite3 --version
+/usr/local/bin/sqlite --version
+
+brew doctor
