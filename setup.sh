@@ -6,9 +6,7 @@ brew update && brew install sqlite3
 
 # make sure I'm not going insane
 sqlite3 --version
-sqlite --version
 
 /usr/local/bin/sqlite3 --version
-/usr/local/bin/sqlite --version
 
 brew doctor
