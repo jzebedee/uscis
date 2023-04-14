@@ -1,11 +1,35 @@
-WITH json_doc AS (
-  SELECT json(readfile('%s')) AS doc
+WITH args1 AS (
+	SELECT
+		filename,
+		substr(filename, length('response-processing-time_')+1) AS no_prefix
+	FROM (SELECT '%s' AS filename)
+), args2 AS (
+	SELECT
+		*,
+		substr(no_prefix, 1, length(no_prefix)-5) AS no_ext
+	FROM args1
+), args3 AS (
+	SELECT
+		*,
+		substr(no_ext, 1, instr(no_ext, '_')-1) AS form_name,
+		substr(no_ext, instr(no_ext, '_')+1, 3) AS office_code,
+		substr(no_ext, instr(no_ext, '_')+5) AS form_subtype
+	FROM args2
+), json_doc AS (
+  SELECT
+    json(readfile(filename)) AS doc,
+    office_code AS true_office_code
+  FROM args3
 ), pt_doc AS (
-  SELECT (doc -> '$.data.processing_time') AS pt FROM json_doc
+  SELECT
+    (doc -> '$.data.processing_time') AS pt,
+    true_office_code
+  FROM json_doc
 ), pt_subtypes_doc AS (
   SELECT
     (pt ->> '$.form_name') AS form_name,
-    (pt ->> '$.office_code') AS office_code,
+    true_office_code AS office_code,
+--  (pt ->> '$.office_code') AS office_code,
     (pt ->> '$.form_note_en') AS form_note_en,
     (pt ->> '$.form_note_es') AS form_note_es,
     json_each.value AS subtype
