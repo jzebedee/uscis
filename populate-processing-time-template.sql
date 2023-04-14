@@ -1,20 +1,20 @@
 WITH args1 AS (
-	SELECT
-		filename,
-		substr(filename, length('response-processing-time_')+1) AS no_prefix
-	FROM (SELECT '%s' AS filename)
+  SELECT
+    filename,
+    substr(filename, length('response-processing-time_')+1) AS no_prefix
+  FROM (SELECT '%s' AS filename)
 ), args2 AS (
-	SELECT
-		*,
-		substr(no_prefix, 1, length(no_prefix)-5) AS no_ext
-	FROM args1
+  SELECT
+    *,
+    substr(no_prefix, 1, length(no_prefix)-5) AS no_ext
+  FROM args1
 ), args3 AS (
-	SELECT
-		*,
-		substr(no_ext, 1, instr(no_ext, '_')-1) AS form_name,
-		substr(no_ext, instr(no_ext, '_')+1, 3) AS office_code,
-		substr(no_ext, instr(no_ext, '_')+5) AS form_subtype
-	FROM args2
+  SELECT
+    *,
+    substr(no_ext, 1, instr(no_ext, '_')-1) AS form_name,
+    substr(no_ext, instr(no_ext, '_')+1, 3) AS office_code,
+    substr(no_ext, instr(no_ext, '_')+5) AS form_subtype
+  FROM args2
 ), json_doc AS (
   SELECT
     json(readfile(filename)) AS doc,
