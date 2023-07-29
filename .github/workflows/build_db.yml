@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build DB
-      run: ./build_db.sh
+      run: OPENSSL_CONF=openssl.cnf ./build_db.sh
     - name: Get DB name
       id: dbname
       run: echo ::set-output name=dbname::"$(basename *.db .db)"
