@@ -38,10 +38,18 @@ jobs:
     steps:
       - name: Download DB
         uses: actions/download-artifact@v3
+      - name: Download previous DB
+        uses: robinraju/release-downloader@v1.8
+        with:
+          latest: true
+          fileName: '*.db'
+          out-file-path: 'prev'
+      - run: sqldiff prev/*.db uscis-db/*.db > sqldiff.txt
       - name: Create daily release
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ needs.build_db.outputs.dbname }}
           tag_name: ${{ needs.build_db.outputs.dbname }}
+          body_path: sqldiff.txt
           files: 'uscis-db/*.db'
           fail_on_unmatched_files: true
