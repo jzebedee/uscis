@@ -27,3 +27,6 @@ brew update && brew install sqlite sqldiff
 
 # rename to current date
 mv uscis.db "$(date +"%F").db"
+
+# generate changelog
+sqldiff prev/*.db *.db > sqldiff.txt
