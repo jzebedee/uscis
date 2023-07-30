@@ -32,7 +32,9 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: changelog
-        path: sqldiff.txt
+        path: |
+          changelog.txt
+          sqldiff.txt
         if-no-files-found: error
     - name: Build JSON DB
       if: always()
@@ -55,6 +57,6 @@ jobs:
         with:
           name: ${{ needs.build_db.outputs.dbname }}
           tag_name: ${{ needs.build_db.outputs.dbname }}
-          body_path: 'changelog/sqldiff.txt'
+          body_path: 'changelog/changelog.txt'
           files: 'uscis-db/*.db'
           fail_on_unmatched_files: true
