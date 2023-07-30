@@ -1,0 +1,5 @@
+The following changes occurred between %s and %s:
+
+```sql
+%s
+```
