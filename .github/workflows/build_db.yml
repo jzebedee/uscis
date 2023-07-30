@@ -10,7 +10,7 @@ jobs:
     outputs:
       dbname: ${{ steps.dbname.outputs.dbname }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build DB
       run: OPENSSL_CONF=openssl.cnf ./build_db.sh
     - name: Get DB name
