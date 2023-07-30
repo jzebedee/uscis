@@ -8,7 +8,7 @@ test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/bre
 test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
 echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
 
-brew update && brew install sqlite
+brew update && brew install sqlite sqldiff
 
 # forms
 ./populate_forms.sh
@@ -27,3 +27,6 @@ brew update && brew install sqlite
 
 # rename to current date
 mv uscis.db "$(date +"%F").db"
+
+# generate changelog
+sqldiff prev/*.db *.db > sqldiff.txt

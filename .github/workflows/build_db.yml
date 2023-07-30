@@ -11,7 +11,13 @@ jobs:
       dbname: ${{ steps.dbname.outputs.dbname }}
     steps:
     - uses: actions/checkout@v3
-    - name: Build DB
+    - name: Download previous DB
+      uses: robinraju/release-downloader@v1.8
+      with:
+        latest: true
+        fileName: '*.db'
+        out-file-path: 'prev'
+    - name: Build DB and changelog
       run: OPENSSL_CONF=openssl.cnf ./build_db.sh
     - name: Get DB name
       id: dbname
@@ -21,6 +27,12 @@ jobs:
       with:
         name: uscis-db
         path: '${{ steps.dbname.outputs.dbname }}.db'
+        if-no-files-found: error
+    - name: Upload changelog
+      uses: actions/upload-artifact@v3
+      with:
+        name: changelog
+        path: sqldiff.txt
         if-no-files-found: error
     - name: Build JSON DB
       if: always()
@@ -43,5 +55,6 @@ jobs:
         with:
           name: ${{ needs.build_db.outputs.dbname }}
           tag_name: ${{ needs.build_db.outputs.dbname }}
+          body_path: 'changelog/sqldiff.txt'
           files: 'uscis-db/*.db'
           fail_on_unmatched_files: true
