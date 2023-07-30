@@ -1,5 +1,7 @@
 # USCIS Dataset
 
+[![Build USCIS DB](https://github.com/jzebedee/uscis/actions/workflows/build_db.yml/badge.svg)](https://github.com/jzebedee/uscis/actions/workflows/build_db.yml)
+
 Daily datasets of USCIS form processing times
 
 ## About
@@ -15,6 +17,10 @@ The dataset releases are produced on a daily cron schedule that scrapes the USCI
 The raw JSON results are also collected into a [SQLite archive](https://www.sqlite.org/sqlar.html) and published as an artifact, in the case of debugging or if there's additional information to extract. These artifacts are _not_ a permanent collection and will be removed eventually based on the [artifact retention period](https://docs.github.com/en/organizations/managing-organization-settings/configuring-the-retention-period-for-github-actions-artifacts-and-logs-in-your-organization).
 
 ## Changelog
+
+### v0.3 - 2023-07-29
+
+* Release notes are now generated with `sqldiff` output to compare daily changes
 
 ### v0.2 - 2022-05-05
 
