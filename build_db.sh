@@ -32,4 +32,11 @@ mv uscis.db "$(date +"%F").db"
 sqldiff prev/*.db *.db > sqldiff.txt
 
 # generate changelog
-printf "$(<changelog-template.txt)" "$(basename prev/*.db .db)" "$(basename *.db .db)" "$(<sqldiff.txt)" > changelog.txt
+sqldiff=$(<sqldiff.txt)
+max_diff_length=124000
+if [ $(wc -c <<< $sqldiff) -gt $max_diff_length ]
+then
+    printf -v sqldiff '%.*s...\n\nTruncated for length' $max_diff_length "$(<sqldiff.txt)"
+fi
+
+printf "$(<changelog-template.txt)" "$(basename prev/*.db .db)" "$(basename *.db .db)" "$sqldiff" > changelog.txt
