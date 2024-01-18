@@ -8,7 +8,7 @@ WITH form_offices_new AS (
       (response ->> '$.data.form_offices.form_name') AS form_name,
       (response ->> '$.data.form_offices.form_type') AS form_type,
       (response -> '$.data.form_offices.offices') AS offices
-    FROM (SELECT json(readfile('%s')) AS response)
+    FROM (SELECT json(CAST(readfile('%s') AS TEXT)) AS response)
   ), json_each(offices)
 ), form_offices_old AS (
   SELECT

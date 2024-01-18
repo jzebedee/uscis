@@ -2,7 +2,7 @@ WITH response_types_json AS (
   SELECT
     json_each.value
   FROM(
-    (SELECT json(readfile('%s')) -> '$.data.form_types.subtypes' AS types)
+    (SELECT json(CAST(readfile('%s') AS TEXT)) -> '$.data.form_types.subtypes' AS types)
   ), json_each(types)
 ), response_types AS (
   SELECT
