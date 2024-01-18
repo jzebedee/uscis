@@ -17,7 +17,7 @@ WITH args1 AS (
   FROM args2
 ), json_doc AS (
   SELECT
-    json(readfile(filename)) AS doc,
+    json(CAST(readfile(filename) AS TEXT)) AS doc,
     office_code AS true_office_code
   FROM args3
 ), pt_doc AS (
