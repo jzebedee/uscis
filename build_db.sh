@@ -10,6 +10,9 @@ echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
 
 brew update && brew install sqlite sqldiff
 
+# populate CF cookies
+./populate_cookies.sh
+
 # forms
 ./populate_forms.sh
 
