@@ -18,7 +18,7 @@ jobs:
         fileName: '*.db'
         out-file-path: 'prev'
     - name: Build DB and changelog
-      run: OPENSSL_CONF=openssl.cnf ./build_db.sh
+      run: ./build_db.sh
     - name: Get DB name
       id: dbname
       run: echo ::set-output name=dbname::"$(basename *.db .db)"
