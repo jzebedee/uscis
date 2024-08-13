@@ -23,7 +23,7 @@ jobs:
       id: dbname
       run: echo ::set-output name=dbname::"$(basename *.db .db)"
     - name: Upload DB
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: uscis-db
         path: '${{ steps.dbname.outputs.dbname }}.db'
