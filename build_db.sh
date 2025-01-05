@@ -2,6 +2,9 @@
 set -euxo pipefail
 
 # install dependencies
+sudo apt-get update && sudo apt-get install libnss3 nss-plugin-pem ca-certificates
+curl -sL https://github.com/lwthiker/curl-impersonate/releases/download/v0.6.1/curl-impersonate-v0.6.1.x86_64-linux-gnu.tar.gz | sudo tar -xz -C /usr/bin
+
 # https://docs.brew.sh/Homebrew-on-Linux#install
 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
