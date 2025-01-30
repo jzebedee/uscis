@@ -19,6 +19,8 @@ jobs:
         out-file-path: 'prev'
     - name: Build DB and changelog
       run: ./build_db.sh
+      env:
+        SLOWMODE: 1
     - name: Get DB name
       id: dbname
       run: echo ::set-output name=dbname::"$(basename *.db .db)"
