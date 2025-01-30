@@ -2,9 +2,17 @@
 set -euxo pipefail
 
 PARAMS="$@"
+REFERER_HEADER="Referer: https://egov.uscis.gov/processing-times/"
 
-curl_chrome116 ${PARAMS} --compressed \
-  --parallel \
-  --parallel-max 2 \
-  -H 'Referer: https://egov.uscis.gov/processing-times/' \
-  --cookie-jar uscis.cookies
+if [ -n "${SLOWMODE:-}" ]; then
+  curl_chrome131 ${PARAMS} --compressed \
+    --rate 5/s \
+    -H "$REFERER_HEADER" \
+    --cookie-jar uscis.cookies
+else
+  curl_chrome131 ${PARAMS} --compressed \
+    --parallel \
+    --parallel-max 2 \
+    -H "$REFERER_HEADER" \
+    --cookie-jar uscis.cookies
+fi
