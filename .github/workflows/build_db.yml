@@ -22,21 +22,27 @@ jobs:
   build_db:
     runs-on: ubuntu-latest
     needs: get_exit_node_ip
+    env:
+      TS_EXIT_NODE_IP: ${{ needs.get_exit_node_ip.outputs.TS_EXIT_NODE_IP }}
     outputs:
       dbname: ${{ steps.dbname.outputs.dbname }}
     steps:
     - uses: actions/checkout@v4
     - name: Test pre-exit node
-      run: curl 'https://api.ipify.org?format=json'
+      run: |
+        curl 'https://api.ipify.org?format=json'
+        ping ${{ env.TS_EXIT_NODE_IP }}
     - name: Connect to stealthnet (exit node)
       uses: tailscale/github-action@v3
       with:
         authkey: ${{ secrets.TS_AUTH_KEY }}
-        args: '--exit-node=${{ needs.get_exit_node_ip.outputs.TS_EXIT_NODE_IP }}'
+        args: '--exit-node=${{ env.TS_EXIT_NODE_IP }}'
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
     - name: Test post-exit node
-      run: curl 'https://api.ipify.org?format=json'
+      run: |
+        curl 'https://api.ipify.org?format=json'
+        ping ${{ env.TS_EXIT_NODE_IP }}
     - name: Download previous DB
       uses: robinraju/release-downloader@v1
       with:
