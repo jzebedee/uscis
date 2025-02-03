@@ -11,12 +11,6 @@ jobs:
       dbname: ${{ steps.dbname.outputs.dbname }}
     steps:
     - uses: actions/checkout@v4
-    - name: Download previous DB
-      uses: robinraju/release-downloader@v1
-      with:
-        latest: true
-        fileName: '*.db'
-        out-file-path: 'prev'
     - name: Connect to stealthnet
       uses: tailscale/github-action@v3
       with:
@@ -34,6 +28,12 @@ jobs:
         args: '--exit-node=${{ env.TS_EXIT_NODE_IP }}'
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
+    - name: Download previous DB
+      uses: robinraju/release-downloader@v1
+      with:
+        latest: true
+        fileName: '*.db'
+        out-file-path: 'prev'
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
