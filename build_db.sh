@@ -5,12 +5,18 @@ set -euxo pipefail
 ./install_deps.sh
 
 # install homebrew dependencies
-./install_brew_deps.sh
+# https://docs.brew.sh/Homebrew-on-Linux#install
+test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
 echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
 
+brew update
+brew install sqlite sqldiff
+
 # Check for required commands
-command -v sqldiff >/dev/null 2>&1 || { echo >&2 "sqldiff command not found. Aborting."; exit 1; }
-command -v sqlite3 >/dev/null 2>&1 || { echo >&2 "sqlite3 command not found. Aborting."; exit 1; }
+command -v sqldiff > /dev/null
+command -v sqlite3 > /dev/null
 
 # install curl-impersonate
 curl -sL https://github.com/lwthiker/curl-impersonate/releases/download/v0.6.1/curl-impersonate-v0.6.1.x86_64-linux-gnu.tar.gz | sudo tar -xz -C /usr/bin
