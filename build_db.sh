@@ -2,10 +2,8 @@
 set -euxo pipefail
 
 # install dependencies
-sudo apt-get update
-sudo apt-get install -y \
-  libnss3 nss-plugin-pem ca-certificates \
-  python3 python3-venv python3-pip
+./install_deps.sh
+
 curl -sL https://github.com/lexiforest/curl-impersonate/releases/download/v0.9.1/curl-impersonate-v0.9.1.x86_64-linux-gnu.tar.gz | sudo tar -xz -C /usr/bin
 
 # https://docs.brew.sh/Homebrew-on-Linux#install
