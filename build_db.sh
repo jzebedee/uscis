@@ -4,15 +4,11 @@ set -euxo pipefail
 # install dependencies
 ./install_deps.sh
 
+# install homebrew dependencies
+./install_brew_deps.sh
+
+# install curl-impersonate
 curl -sL https://github.com/lexiforest/curl-impersonate/releases/download/v0.9.1/curl-impersonate-v0.9.1.x86_64-linux-gnu.tar.gz | sudo tar -xz -C /usr/bin
-
-# https://docs.brew.sh/Homebrew-on-Linux#install
-test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
-echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
-
-brew update && brew install sqlite sqldiff
 
 # populate CF cookies
 ./populate_cookies.sh
