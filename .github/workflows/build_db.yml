@@ -58,6 +58,8 @@ jobs:
         STEALTH: 1
         STEALTH_ENDPOINT: ${{ secrets.STEALTH_ENDPOINT }}
         CURLSCRIPT_URL: ${{ secrets.CURLSCRIPT_URL }}
+    - name: Disconnect stealthnet
+      run: sudo tailscale down
     - name: Get DB name
       id: dbname
       run: echo "dbname=$(basename *.db .db)" >> $GITHUB_OUTPUT
