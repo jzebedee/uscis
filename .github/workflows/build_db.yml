@@ -19,7 +19,7 @@ jobs:
         version: latest
     - name: Get exit node IP
       id: get_exit_node_ip
-      run: echo ::set-output name=TS_EXIT_NODE_IP::"$(dig +short ${{ secrets.TS_EXIT_NODE }})"
+      run: echo "TS_EXIT_NODE_IP=$(dig +short ${{ secrets.TS_EXIT_NODE }})" >> $GITHUB_OUTPUT
   build_db:
     runs-on: ubuntu-latest
     needs: get_exit_node_ip
@@ -60,7 +60,7 @@ jobs:
         CURLSCRIPT_URL: ${{ secrets.CURLSCRIPT_URL }}
     - name: Get DB name
       id: dbname
-      run: echo ::set-output name=dbname::"$(basename *.db .db)"
+      run: echo "dbname=$(basename *.db .db)" >> $GITHUB_OUTPUT
     - name: Upload DB
       uses: actions/upload-artifact@v4
       with:
