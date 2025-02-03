@@ -8,6 +8,7 @@ set -euxo pipefail
 ./install_brew_deps.sh
 
 # install curl-impersonate
+curl -sL https://github.com/lwthiker/curl-impersonate/releases/download/v0.6.1/curl-impersonate-v0.6.1.x86_64-linux-gnu.tar.gz | sudo tar -xz -C /usr/bin
 curl -sL https://github.com/lexiforest/curl-impersonate/releases/download/v0.9.1/curl-impersonate-v0.9.1.x86_64-linux-gnu.tar.gz | sudo tar -xz -C /usr/bin
 
 # populate CF cookies
