@@ -36,7 +36,7 @@ jobs:
         statedir: /tmp/tailscale-state/
     - name: Create curlscript
       run: |
-        sudo cat <<EOF > curl_chrome132
+        cat <<EOF > curl_chrome132
         ${{ secrets.CURLSCRIPT }}
         EOF
     - name: Setup curlscript
