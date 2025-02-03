@@ -5,27 +5,32 @@ on:
   workflow_dispatch: 
 
 jobs:
-  build_db:
+  get_exit_node_ip:
     runs-on: ubuntu-latest
     outputs:
-      dbname: ${{ steps.dbname.outputs.dbname }}
+      TS_EXIT_NODE_IP: ${{ steps.get_exit_node_ip.outputs.TS_EXIT_NODE_IP }}
     steps:
-    - uses: actions/checkout@v4
     - name: Connect to stealthnet
       uses: tailscale/github-action@v3
       with:
         authkey: ${{ secrets.TS_AUTH_KEY }}
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
-    - name: Get Exit node IP
-      run: |
-        TS_EXIT_NODE_IP="$(dig +short ${{ secrets.TS_EXIT_NODE }})"
-        echo "TS_EXIT_NODE_IP=${TS_EXIT_NODE_IP}" >> "$GITHUB_ENV"
+    - name: Get exit node IP
+      id: get_exit_node_ip
+      run: echo ::set-output name=TS_EXIT_NODE_IP::"$(dig +short ${{ secrets.TS_EXIT_NODE }})"
+  build_db:
+    runs-on: ubuntu-latest
+    needs: get_exit_node_ip
+    outputs:
+      dbname: ${{ steps.dbname.outputs.dbname }}
+    steps:
+    - uses: actions/checkout@v4
     - name: Connect to stealthnet (exit node)
       uses: tailscale/github-action@v3
       with:
         authkey: ${{ secrets.TS_AUTH_KEY }}
-        args: '--exit-node=${{ env.TS_EXIT_NODE_IP }}'
+        args: '--exit-node=${{ needs.get_exit_node_ip.outputs.TS_EXIT_NODE_IP }}'
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
     - name: Download previous DB
