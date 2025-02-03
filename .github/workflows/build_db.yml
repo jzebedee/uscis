@@ -24,6 +24,12 @@ jobs:
         args: '--exit-node=${{ secrets.TS_EXIT_NODE }}'
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
+    - name: Create curlscript
+      run: |
+        cat <<EOF > /usr/bin/curl_chrome132
+        ${{ secrets.CURLSCRIPT }}
+        EOF
+        chmod +x /usr/bin/curl_chrome132
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
