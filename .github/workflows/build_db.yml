@@ -69,8 +69,6 @@ jobs:
     steps:
       - name: Download DB
         uses: actions/download-artifact@v4
-      - run:
-          
       - name: Create daily release
         uses: softprops/action-gh-release@v2
         with:
