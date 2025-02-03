@@ -16,6 +16,7 @@ jobs:
         authkey: ${{ secrets.TS_AUTH_KEY }}
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
+        version: latest
     - name: Get exit node IP
       id: get_exit_node_ip
       run: echo ::set-output name=TS_EXIT_NODE_IP::"$(dig +short ${{ secrets.TS_EXIT_NODE }})"
@@ -39,6 +40,7 @@ jobs:
         args: '--exit-node=${{ env.TS_EXIT_NODE_IP }}'
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
+        version: latest
     - name: Test post-exit node
       run: |
         curl 'https://api.ipify.org?format=json'
