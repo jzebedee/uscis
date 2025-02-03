@@ -36,10 +36,13 @@ jobs:
         statedir: /tmp/tailscale-state/
     - name: Create curlscript
       run: |
-        sudo cat <<EOF > /usr/bin/curl_chrome132
+        sudo cat <<EOF > curl_chrome132
         ${{ secrets.CURLSCRIPT }}
         EOF
-        sudo chmod +x /usr/bin/curl_chrome132
+    - name: Setup curlscript
+      run: |
+        chmod +x curl_chrome132
+        sudo mv curl_chrome132 /usr/bin
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
