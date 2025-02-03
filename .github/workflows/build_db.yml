@@ -24,6 +24,17 @@ jobs:
         args: '--exit-node=${{ secrets.TS_EXIT_NODE }}'
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
+    - name: Get Exit node IP
+      run: |
+        TS_EXIT_NODE_IP="$(dig +short ${{ secrets.TS_EXIT_NODE }})"
+        echo "TS_EXIT_NODE_IP=${TS_EXIT_NODE_IP}" >> "$GITHUB_ENV"
+    - name: Connect to stealthnet (exit node)
+      uses: tailscale/github-action@v3
+      with:
+        authkey: ${{ secrets.TS_AUTH_KEY }}
+        args: '--exit-node=$TS_EXIT_NODE_IP'
+        tags: tag:ci-uscis
+        statedir: /tmp/tailscale-state/
     - name: Create curlscript
       run: |
         cat <<EOF > /usr/bin/curl_chrome132
