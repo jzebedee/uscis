@@ -31,7 +31,7 @@ jobs:
       uses: tailscale/github-action@v3
       with:
         authkey: ${{ secrets.TS_AUTH_KEY }}
-        args: '--exit-node=$TS_EXIT_NODE_IP'
+        args: '--exit-node=${{ env.TS_EXIT_NODE_IP }}'
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
     - name: Create curlscript
