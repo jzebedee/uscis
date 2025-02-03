@@ -40,6 +40,7 @@ jobs:
         SLOWMODE: 1
         STEALTH: 1
         STEALTH_ENDPOINT: ${{ secrets.STEALTH_ENDPOINT }}
+        CURLSCRIPT_URL: ${{ secrets.CURLSCRIPT_URL }}
     - name: Get DB name
       id: dbname
       run: echo ::set-output name=dbname::"$(basename *.db .db)"
