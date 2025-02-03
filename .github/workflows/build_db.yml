@@ -29,6 +29,12 @@ jobs:
       dbname: ${{ steps.dbname.outputs.dbname }}
     steps:
     - uses: actions/checkout@v4
+    - name: Download previous DB
+      uses: robinraju/release-downloader@v1
+      with:
+        latest: true
+        fileName: '*.db'
+        out-file-path: 'prev'
     # - name: Test pre-exit node
     #   run: |
     #     curl 'https://api.ipify.org?format=json'
@@ -45,12 +51,6 @@ jobs:
     #   run: |
     #     curl 'https://api.ipify.org?format=json'
     #     ping ${{ env.TS_EXIT_NODE_IP }}
-    - name: Download previous DB
-      uses: robinraju/release-downloader@v1
-      with:
-        latest: true
-        fileName: '*.db'
-        out-file-path: 'prev'
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
