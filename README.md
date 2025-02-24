@@ -18,7 +18,7 @@ The raw JSON results are also collected into a [SQLite archive](https://www.sqli
 
 ## Changelog
 
-### v0.5 - 2925-02-23
+### v0.5 - 2025-02-23
 
 * We now collect FOIA processing times.
 
