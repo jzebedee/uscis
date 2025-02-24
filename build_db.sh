@@ -26,6 +26,9 @@ curl -sL "$CURLSCRIPT_URL" | sudo tar -xz -C /usr/bin
 # populate CF cookies
 ./populate_cookies.sh
 
+# FOIA
+./populate_foia_processing_times.sh
+
 # forms
 ./populate_forms.sh
 
