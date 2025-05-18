@@ -54,7 +54,7 @@ jobs:
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
-        SLOWMODE: 1
+        RATE: ${{ vars.SLOWMODE_RATE }}
         STEALTH: 1
         STEALTH_ENDPOINT: ${{ secrets.STEALTH_ENDPOINT }}
         CURLSCRIPT_URL: ${{ secrets.CURLSCRIPT_URL }}

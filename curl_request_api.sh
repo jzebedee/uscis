@@ -5,8 +5,8 @@ PARAMS="$@"
 REFERER_HEADER="Referer: https://egov.uscis.gov/processing-times/"
 
 DEFAULTS=" --fail-with-body -s -S"
-if [ -n "${SLOWMODE:-}" ]; then
-  RATE_DEFAULTS=" --rate 5/s"
+if [ -n "${RATE:-}" ]; then
+  RATE_DEFAULTS=" --rate ${RATE}/s"
 else
   RATE_DEFAULTS=" --parallel --parallel-max 2"
 fi
