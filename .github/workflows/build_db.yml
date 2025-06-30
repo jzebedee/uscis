@@ -42,6 +42,10 @@ jobs:
         latest: true
         fileName: '*.db'
         out-file-path: 'prev'
+    - name: Show IP before Tailscale
+      run: |
+        echo "IP from ifconfig.me:"
+        curl -s https://ifconfig.me
     - name: Connect to stealthnet (exit node)
       uses: tailscale/github-action@v3
       with:
