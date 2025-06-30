@@ -52,6 +52,13 @@ jobs:
         statedir: /tmp/tailscale-state/
         version: latest
         use-cache: 'true'
+    - name: Verify HTTP traffic is routed through exit node
+      run: |
+        echo "Available exit nodes:"
+        tailscale status | grep 'exit node'
+
+        echo "IP from ifconfig.me:"
+        curl -s https://ifconfig.me
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
