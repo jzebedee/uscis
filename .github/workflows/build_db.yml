@@ -13,13 +13,19 @@ jobs:
     - name: Connect to stealthnet
       uses: tailscale/github-action@v3
       with:
-        authkey: ${{ secrets.TS_AUTH_KEY }}
+        oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+        oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
         version: latest
     - name: Get exit node IP
       id: get_exit_node_ip
       run: echo "TS_EXIT_NODE_IP=$(dig +short ${{ secrets.TS_EXIT_NODE }})" >> $GITHUB_OUTPUT
+    - name: Verify exit node set
+      run: |
+        if [ -z $"{TS_EXIT_NODE_IP}" ]; then
+          exit 1
+        fi
   build_db:
     runs-on: ubuntu-latest
     needs: get_exit_node_ip
@@ -35,22 +41,15 @@ jobs:
         latest: true
         fileName: '*.db'
         out-file-path: 'prev'
-    # - name: Test pre-exit node
-    #   run: |
-    #     curl 'https://api.ipify.org?format=json'
-    #     ping ${{ env.TS_EXIT_NODE_IP }}
     - name: Connect to stealthnet (exit node)
       uses: tailscale/github-action@v3
       with:
-        authkey: ${{ secrets.TS_AUTH_KEY }}
+        oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+        oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
         args: '--exit-node=${{ env.TS_EXIT_NODE_IP }}'
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
         version: latest
-    # - name: Test post-exit node
-    #   run: |
-    #     curl 'https://api.ipify.org?format=json'
-    #     ping ${{ env.TS_EXIT_NODE_IP }}
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
