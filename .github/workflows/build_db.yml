@@ -18,6 +18,7 @@ jobs:
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
         version: latest
+        use-cache: 'true'
     - name: Get exit node IP
       id: get_exit_node_ip
       run: echo "TS_EXIT_NODE_IP=$(dig +short ${{ secrets.TS_EXIT_NODE }})" >> $GITHUB_OUTPUT
@@ -50,6 +51,7 @@ jobs:
         tags: tag:ci-uscis
         statedir: /tmp/tailscale-state/
         version: latest
+        use-cache: 'true'
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
