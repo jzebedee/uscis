@@ -24,9 +24,6 @@ command -v sqlite3 > /dev/null
 # populate CF cookies
 ./populate_cookies.sh
 
-# FOIA
-./populate_foia_processing_times.sh
-
 # forms
 ./populate_forms.sh
 
@@ -38,6 +35,10 @@ command -v sqlite3 > /dev/null
 
 # processing times
 ./populate_processing_times.sh
+
+# Partition warning!
+# FOIA
+./populate_foia_processing_times.sh
 
 # must be last for selftest checksums
 ./populate_metadata.sh
