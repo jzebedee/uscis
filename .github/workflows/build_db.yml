@@ -4,6 +4,8 @@ on:
     - cron: '30 4 * * *'
   workflow_dispatch: 
 
+# TS logic from simonw's https://github.com/simonw/til/blob/main/tailscale/tailscale-github-actions.md
+
 jobs:
   get_exit_node_ip:
     runs-on: ubuntu-latest
