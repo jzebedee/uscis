@@ -19,7 +19,14 @@ command -v sqldiff > /dev/null
 command -v sqlite3 > /dev/null
 
 # install curl-impersonate
-curl -sL https://github.com/lexiforest/curl-impersonate/releases/download/v1.0.0/curl-impersonate-v1.0.0.x86_64-linux-gnu.tar.gz | sudo tar -xz -C /usr/bin
+CURL_URL="https://github.com/lexiforest/curl-impersonate/releases/download/v1.1.0/curl-impersonate-v1.1.0.x86_64-linux-gnu.tar.gz"
+CURL_SHA="69dc4835aea5241e85742e465f2ea70c27e4db02675ccd6f8ae5a63a919bc098"
+CURL_OUT="$(mktemp)"
+
+curl -sL -o "$CURL_OUT" "$CURL_URL"
+echo "$CURL_SHA  $CURL_OUT" | sha256sum -c
+sudo tar -xz -C /usr/bin -f "$CURL_OUT"
+rm "$CURL_OUT"
 
 # populate CF cookies
 ./populate_cookies.sh
