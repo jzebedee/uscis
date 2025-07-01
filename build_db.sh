@@ -21,12 +21,6 @@ command -v sqlite3 > /dev/null
 # install curl-impersonate
 ./install_curl.sh
 
-# populate CF cookies (FIRST)
-./populate_cookies.sh "https://first.uscis.gov/"
-
-# FOIA
-./populate_foia_processing_times.sh
-
 # populate CF cookies (EGOV)
 ./populate_cookies.sh "https://egov.uscis.gov/processing-times/"
 
@@ -41,6 +35,12 @@ command -v sqlite3 > /dev/null
 
 # processing times
 ./populate_processing_times.sh
+
+# populate CF cookies (FIRST)
+./populate_cookies.sh "https://first.uscis.gov/"
+
+# FOIA
+./populate_foia_processing_times.sh
 
 # must be last for selftest checksums
 ./populate_metadata.sh
