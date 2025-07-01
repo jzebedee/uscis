@@ -12,4 +12,5 @@ if ! [ -x "$(command -v curl-impersonate)" ]; then
     rm "$CURL_OUT"
 fi
 
+sudo cp curl_chrome132 /usr/bin/
 sudo cp curl_chrome138 /usr/bin/
