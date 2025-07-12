@@ -2,8 +2,8 @@
 set -euxo pipefail
 
 if ! [ -x "$(command -v curl-impersonate)" ]; then
-    CURL_URL="https://github.com/lexiforest/curl-impersonate/releases/download/v1.1.0/curl-impersonate-v1.1.0.x86_64-linux-gnu.tar.gz"
-    CURL_SHA="69dc4835aea5241e85742e465f2ea70c27e4db02675ccd6f8ae5a63a919bc098"
+    CURL_URL="https://github.com/lexiforest/curl-impersonate/releases/download/v1.1.1/curl-impersonate-v1.1.1.x86_64-linux-gnu.tar.gz"
+    CURL_SHA="e5e128c94f9a6423814985ba483bd2fb3ac2c1558441004f672f7db1f1ba15e5"
     CURL_OUT="$(mktemp)"
 
     curl -sL -o "$CURL_OUT" "$CURL_URL"
