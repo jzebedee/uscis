@@ -92,7 +92,7 @@ jobs:
         if-no-files-found: error
     - name: Build JSON DB
       if: always()
-      run: sqlite3 responses.db -A -c *.json
+      run: sqlite3 responses.db -A -c *.json *.cookies
     - name: Upload JSON DB
       uses: actions/upload-artifact@v4
       if: always()
