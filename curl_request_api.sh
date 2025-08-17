@@ -13,7 +13,7 @@ fi
 COOKIE_JAR="uscis.cookies"
 COOKIE_DEFAULTS=" -b ${COOKIE_JAR} --cookie-jar ${COOKIE_JAR}"
 
-curl_chrome138 ${PARAMS} \
+curl_chrome132 ${PARAMS} \
   ${DEFAULTS} \
   ${RATE_DEFAULTS} \
   ${COOKIE_DEFAULTS} \
