@@ -63,8 +63,8 @@ jobs:
         echo "Available exit nodes:"
         tailscale status | grep 'exit node'
 
-        ./curl_request_api.sh ${{ env.IPTEST_URL }}
-        ./curl_request_api.sh ${{ env.STEALTH_IPTEST_URL }}
+        timeout 30s bash -c "until ./curl_request_api.sh ${{ env.IPTEST_URL }}; do sleep 5; done"
+        timeout 30s bash -c "until ./curl_request_api.sh ${{ env.STEALTH_IPTEST_URL }}; do sleep 5; done"
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
