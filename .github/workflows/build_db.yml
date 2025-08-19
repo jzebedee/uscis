@@ -6,6 +6,10 @@ on:
 
 # TS logic from simonw's https://github.com/simonw/til/blob/main/tailscale/tailscale-github-actions.md
 
+env:
+  IPTEST_URL: ${{ vars.IPTEST_URL }}
+  STEALTH_IPTEST_URL: ${{ secrets.STEALTH_IPTEST_URL }}
+
 jobs:
   get_exit_node_ip:
     runs-on: ubuntu-latest
@@ -44,9 +48,7 @@ jobs:
         fileName: '*.db'
         out-file-path: 'prev'
     - name: Show IP before Tailscale
-      run: |
-        echo "IP from ifconfig.me:"
-        curl -s https://ifconfig.me
+      run: curl -s ${{ env.IPTEST_URL }}
     - name: Connect to stealthnet (exit node)
       uses: tailscale/github-action@v3
       with:
@@ -61,8 +63,8 @@ jobs:
         echo "Available exit nodes:"
         tailscale status | grep 'exit node'
 
-        echo "IP from ifconfig.me:"
-        curl -s https://ifconfig.me
+        curl -s ${{ env.IPTEST_URL }}
+        curl -s ${{ env.STEALTH_IPTEST_URL }}
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
