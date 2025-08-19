@@ -52,7 +52,7 @@ jobs:
       with:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-        args: '--exit-node=${{ env.TS_EXIT_NODE_IP }}'
+        args: '--accept-dns=true --exit-node=${{ env.TS_EXIT_NODE_IP }}'
         tags: tag:ci-uscis
         version: latest
         use-cache: 'true'
