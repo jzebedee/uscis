@@ -48,7 +48,7 @@ jobs:
         fileName: '*.db'
         out-file-path: 'prev'
     - name: Show IP before Tailscale
-      run: curl -s ${{ env.IPTEST_URL }}
+      run: ./curl_request_api.sh ${{ env.IPTEST_URL }}
     - name: Connect to stealthnet (exit node)
       uses: tailscale/github-action@v3
       with:
@@ -63,8 +63,8 @@ jobs:
         echo "Available exit nodes:"
         tailscale status | grep 'exit node'
 
-        curl -s ${{ env.IPTEST_URL }}
-        curl -s ${{ env.STEALTH_IPTEST_URL }}
+        ./curl_request_api.sh ${{ env.IPTEST_URL }}
+        ./curl_request_api.sh ${{ env.STEALTH_IPTEST_URL }}
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
