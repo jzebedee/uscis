@@ -18,7 +18,6 @@ jobs:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
         tags: tag:ci-uscis
-        statedir: /tmp/tailscale-state/
         version: latest
         use-cache: 'true'
     - name: Get exit node IP
@@ -55,7 +54,6 @@ jobs:
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
         args: '--exit-node=${{ env.TS_EXIT_NODE_IP }}'
         tags: tag:ci-uscis
-        statedir: /tmp/tailscale-state/
         version: latest
         use-cache: 'true'
     - name: Verify HTTP traffic is routed through exit node
