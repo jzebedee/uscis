@@ -47,6 +47,8 @@ jobs:
         latest: true
         fileName: '*.db'
         out-file-path: 'prev'
+    - name: Install cURL scripts
+      run: ./install_curl.sh
     - name: Show IP before Tailscale
       run: ./curl_request_api.sh ${{ env.IPTEST_URL }}
     - name: Connect to stealthnet (exit node)
