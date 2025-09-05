@@ -35,6 +35,16 @@ jobs:
     - name: Install cURL scripts
       run: ./install_curl.sh
     - name: Show IP before Tailscale
+      run: ./curl_request_api.sh ${{ env.IPTEST_URL }}
+    - name: Connect to stealthnet
+      uses: tailscale/github-action@v3
+      with:
+        oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+        oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+        tags: tag:ci-uscis
+        version: latest
+        use-cache: 'true'
+    - name: Show IP after Tailscale
       run: |
         timeout 30s bash -c "until ./curl_request_api.sh ${{ env.IPTEST_URL }}; do sleep 5; done"
         timeout 30s bash -c "until ./curl_request_api.sh ${{ env.STEALTH_IPTEST_URL }}; do sleep 5; done"
