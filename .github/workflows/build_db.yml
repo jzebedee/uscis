@@ -9,7 +9,6 @@ on:
 env:
   IPTEST_URL: ${{ vars.IPTEST_URL }}
   STEALTH_IPTEST_URL: ${{ secrets.STEALTH_IPTEST_URL }}
-  RATE: ${{ vars.RATE }}
 
 jobs:
   get_exit_node_ip:
@@ -71,8 +70,8 @@ jobs:
     - name: Build DB and changelog
       run: ./build_db.sh
       env:
-        RATE: ${{ vars.SLOWMODE_RATE }}
-        STEALTH: 1
+        RATE: ${{ vars.RATE }}
+        STEALTH: ${{ vars.STEALTH }}
         STEALTH_ENDPOINT: ${{ secrets.STEALTH_ENDPOINT }}
     - name: Disconnect stealthnet
       run: sudo tailscale down

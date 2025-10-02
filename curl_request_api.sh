@@ -6,7 +6,7 @@ REFERER_HEADER="Referer: https://egov.uscis.gov/processing-times/"
 
 DEFAULTS=" --fail-with-body -s -S"
 if [ -n "${RATE:-}" ]; then
-  RATE_DEFAULTS=" --rate ${RATE}/s"
+  RATE_DEFAULTS=" --rate ${RATE}"
 else
   RATE_DEFAULTS=" --parallel --parallel-max 2"
 fi
