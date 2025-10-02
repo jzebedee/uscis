@@ -9,6 +9,7 @@ on:
 env:
   IPTEST_URL: ${{ vars.IPTEST_URL }}
   STEALTH_IPTEST_URL: ${{ secrets.STEALTH_IPTEST_URL }}
+  RATE: ${{ vars.RATE }}
 
 jobs:
   get_exit_node_ip:
