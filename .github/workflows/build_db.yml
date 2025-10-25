@@ -7,6 +7,7 @@ on:
 # TS logic from simonw's https://github.com/simonw/til/blob/main/tailscale/tailscale-github-actions.md
 
 env:
+  TAILSCALE_VERSION: ${{ vars.TAILSCALE_VERSION }}
   IPTEST_URL: ${{ vars.IPTEST_URL }}
   STEALTH_IPTEST_URL: ${{ secrets.STEALTH_IPTEST_URL }}
 
@@ -22,7 +23,7 @@ jobs:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
         tags: tag:ci-uscis
-        version: latest
+        version: ${{ env.TAILSCALE_VERSION }}
         use-cache: 'true'
     - name: Get exit node IP
       id: get_exit_node_ip
@@ -59,7 +60,7 @@ jobs:
         args: '--accept-dns=true --exit-node=${{ env.TS_EXIT_NODE_IP }}'
         ping: '${{ secrets.TS_EXIT_NODE }}'
         tags: tag:ci-uscis
-        version: latest
+        version: ${{ env.TAILSCALE_VERSION }}
         use-cache: 'true'
     - name: Verify HTTP traffic is routed through exit node
       run: |
