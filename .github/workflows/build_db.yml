@@ -56,7 +56,7 @@ jobs:
       with:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-        args: '--exit-node=${{ env.TS_EXIT_NODE_IP }}'
+        args: '--accept-dns=true --exit-node=${{ env.TS_EXIT_NODE_IP }}'
         ping: '${{ secrets.TS_EXIT_NODE }}'
         tags: tag:ci-uscis
         version: latest
@@ -66,6 +66,7 @@ jobs:
         echo "Available exit nodes:"
         tailscale status | grep 'exit node'
 
+        timeout 30s bash -c "until ./curl_request_api.sh 1.1.1.1; do sleep 5; done"
         timeout 30s bash -c "until ./curl_request_api.sh ${{ env.IPTEST_URL }}; do sleep 5; done"
         timeout 30s bash -c "until ./curl_request_api.sh ${{ env.STEALTH_IPTEST_URL }}; do sleep 5; done"
     - name: Build DB and changelog
