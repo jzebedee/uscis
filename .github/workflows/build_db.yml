@@ -17,7 +17,7 @@ jobs:
       TS_EXIT_NODE_IP: ${{ steps.get_exit_node_ip.outputs.TS_EXIT_NODE_IP }}
     steps:
     - name: Connect to stealthnet
-      uses: tailscale/github-action@v3
+      uses: tailscale/github-action@v4
       with:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
@@ -40,7 +40,7 @@ jobs:
     outputs:
       dbname: ${{ steps.dbname.outputs.dbname }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Download previous DB
       uses: robinraju/release-downloader@v1
       with:
@@ -52,7 +52,7 @@ jobs:
     - name: Show IP before Tailscale
       run: ./curl_request_api.sh ${{ env.IPTEST_URL }}
     - name: Connect to stealthnet (exit node)
-      uses: tailscale/github-action@v3
+      uses: tailscale/github-action@v4
       with:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
@@ -79,13 +79,13 @@ jobs:
       id: dbname
       run: echo "dbname=$(basename *.db .db)" >> $GITHUB_OUTPUT
     - name: Upload DB
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: uscis-db
         path: '${{ steps.dbname.outputs.dbname }}.db'
         if-no-files-found: error
     - name: Upload changelog
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: changelog
         path: |
@@ -96,7 +96,7 @@ jobs:
       if: always()
       run: sqlite3 responses.db -A -c *.json *.cookies
     - name: Upload JSON DB
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: responses-db
@@ -108,7 +108,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     steps:
       - name: Download DB
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
       - name: Create daily release
         uses: softprops/action-gh-release@v2
         with:
