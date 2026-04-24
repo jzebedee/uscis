@@ -21,6 +21,22 @@ command -v sqlite3 > /dev/null
 # populate CF cookies (EGOV)
 ./populate_cookies.sh "https://egov.uscis.gov/processing-times/"
 
+# cache Next.js action ids once for the whole build
+cache_next_action_id() {
+    local action_name="$1"
+    local cache_var="NEXT_ACTION_ID_$(printf '%s' "$action_name" | tr '[:lower:]' '[:upper:]' | tr -cd 'A-Z0-9')"
+    local action_id
+
+    action_id="$(uv run ./resolve_next_action_id.py "$action_name")"
+    printf -v "$cache_var" '%s' "$action_id"
+    export "$cache_var"
+}
+
+cache_next_action_id getFormNumbers
+cache_next_action_id getFormCategories
+cache_next_action_id getOfficesScs
+cache_next_action_id getProcessingTime
+
 # forms
 ./populate_forms.sh
 

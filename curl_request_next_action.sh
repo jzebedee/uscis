@@ -29,7 +29,11 @@ if [ -z "$OUTPUT_FILE" ]; then
   exit 2
 fi
 
-ACTION_ID="$(uv run ./resolve_next_action_id.py "$ACTION_NAME")"
+cache_var="NEXT_ACTION_ID_$(printf '%s' "$ACTION_NAME" | tr '[:lower:]' '[:upper:]' | tr -cd 'A-Z0-9')"
+ACTION_ID="${!cache_var:-}"
+if [ -z "$ACTION_ID" ]; then
+  ACTION_ID="$(uv run ./resolve_next_action_id.py "$ACTION_NAME")"
+fi
 
 JSON_ARGS="$(python3 - "${ARGS[@]}" <<'PY'
 import json
