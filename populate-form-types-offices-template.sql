@@ -1,35 +1,20 @@
 WITH form_offices_new AS (
   SELECT
-    form_name,
-    form_type AS form_key,
-    (json_each.value ->> '$.office_code') AS office
-  FROM(
-    SELECT
-      (response ->> '$.data.form_offices.form_name') AS form_name,
-      (response ->> '$.data.form_offices.form_type') AS form_type,
-      (response -> '$.data.form_offices.offices') AS offices
-    FROM (SELECT json(CAST(readfile('%s') AS TEXT)) AS response)
-  ), json_each(offices)
-), form_offices_old AS (
-  SELECT
-    form_name,
-    form_key,
-    (json_each.value) AS office
-  FROM form_types AS ft, json_each(ft.offices)
-), form_offices_merged AS (
-  SELECT
-    form_name,
-    form_key,
-    json_group_array(office) AS offices
+    file_args.form_name,
+    file_args.form_key,
+    json_group_array(json_each.value ->> '$.officeCode') AS offices
   FROM (
-    SELECT * FROM form_offices_new AS fo
-    LEFT JOIN form_offices_old AS ft
-    ON ft.form_name = fo.form_name AND ft.form_key = fo.form_key
-  )
+    SELECT
+      '%s' AS filename,
+      '%s' AS form_name,
+      '%s' AS form_key
+  ) AS file_args,
+  json_each((SELECT json(CAST(readfile(file_args.filename) AS TEXT)) -> '$.data.items'))
+  GROUP BY file_args.form_name, file_args.form_key
 )
 
 UPDATE form_types AS ft
 SET
   offices = fo.offices
-FROM form_offices_merged AS fo
+FROM form_offices_new AS fo
 WHERE ft.form_name = fo.form_name AND ft.form_key = fo.form_key;

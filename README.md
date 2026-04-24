@@ -12,7 +12,9 @@ Unfortunately, these estimates are updated silently without any notification or 
 
 ## How it works
 
-The dataset releases are produced on a daily cron schedule that scrapes the USCIS case processing time API and compiles the results into a SQLite database.
+The dataset releases are produced on a daily cron schedule that scrapes the USCIS case processing time site and compiles the results into a SQLite database.
+
+USCIS has moved the processing-times page to Next.js App Router server actions. The scrape pipeline now posts to the page route with the page's `Next-Action` identifiers, normalizes the returned `text/x-component` payloads into JSON with a small Python helper, and refreshes the Cloudflare cookie jar when a challenge page appears. If Cloudflare blocks the request outright, the pipeline aborts instead of trying to guess around it.
 
 The raw JSON results are also collected into a [SQLite archive](https://www.sqlite.org/sqlar.html) and published as an artifact, in the case of debugging or if there's additional information to extract. These artifacts are _not_ a permanent collection and will be removed eventually based on the [artifact retention period](https://docs.github.com/en/organizations/managing-organization-settings/configuring-the-retention-period-for-github-actions-artifacts-and-logs-in-your-organization).
 

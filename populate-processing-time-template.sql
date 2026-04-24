@@ -22,16 +22,16 @@ WITH args1 AS (
   FROM args3
 ), pt_doc AS (
   SELECT
-    (doc -> '$.data.processing_time') AS pt,
+    (doc -> '$.data.data.processingTime') AS pt,
     true_office_code
   FROM json_doc
 ), pt_subtypes_doc AS (
   SELECT
-    (pt ->> '$.form_name') AS form_name,
+    (pt ->> '$.formName') AS form_name,
     true_office_code AS office_code,
 --  (pt ->> '$.office_code') AS office_code,
-    (pt ->> '$.form_note_en') AS form_note_en,
-    (pt ->> '$.form_note_es') AS form_note_es,
+    (pt ->> '$.formNoteEn') AS form_note_en,
+    (pt ->> '$.formNoteEs') AS form_note_es,
     json_each.value AS subtype
   FROM pt_doc, json_each(pt -> '$.subtypes')
 ), pt_record AS (
@@ -40,17 +40,17 @@ WITH args1 AS (
     office_code,
     form_note_en,
     form_note_es,
-    (subtype ->> '$.form_type') AS form_subtype,
-    (subtype ->> '$.publication_date') AS publication_date,
+    (subtype ->> '$.formType') AS form_subtype,
+    (subtype ->> '$.publicationDate') AS publication_date,
     (subtype ->> '$.range[0].value') AS range_upper,
-    (subtype ->> '$.range[0].unit') AS range_upper_unit,
+    (subtype ->> '$.range[0].unitEn') AS range_upper_unit,
     (subtype ->> '$.range[1].value') AS range_lower,
-    (subtype ->> '$.range[1].unit') AS range_lower_unit,
-    (subtype ->> '$.service_request_date') AS service_request_date,
-    (subtype ->> '$.subtype_info_en') AS subtype_info_en,
-    (subtype ->> '$.subtype_info_es') AS subtype_info_es,
-    (subtype ->> '$.subtype_note_en') AS subtype_note_en,
-    (subtype ->> '$.subtype_note_es') AS subtype_note_es
+    (subtype ->> '$.range[1].unitEn') AS range_lower_unit,
+    (subtype ->> '$.serviceRequestDate') AS service_request_date,
+    (subtype ->> '$.subtypeInfoEn') AS subtype_info_en,
+    (subtype ->> '$.subtypeInfoEs') AS subtype_info_es,
+    (subtype ->> '$.subtypeNoteEn') AS subtype_note_en,
+    (subtype ->> '$.subtypeNoteEs') AS subtype_note_es
   FROM pt_subtypes_doc
 )
 
