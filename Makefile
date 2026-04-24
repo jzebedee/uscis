@@ -19,5 +19,7 @@ clean-all: clean clean-publish
 
 examine-responses:
 	mkdir -p _examine/
-	unzip responses-db.zip -d _examine/ && rm responses-db.zip
-	sqlite3 _examine/responses.db -Ax _examine/ && rm _examine/responses.db
+	unzip responses-db.zip -d _examine/ \
+	  && rm responses-db.zip \
+	  && sqlite3 _examine/responses.db -Ax _examine/ \
+	  && rm _examine/responses.db

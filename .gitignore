@@ -362,5 +362,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-#
+# uscis
+_examine/
 dbs/
+pub/
+prev/
