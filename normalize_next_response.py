@@ -17,6 +17,7 @@ import json
 import re
 import sys
 from collections import deque
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -85,32 +86,94 @@ def _load_json(text: str) -> Any | None:
         return None
 
 
-def _load_next_component_payload(text: str) -> Any | None:
-    for line in text.splitlines():
-        # Next.js server-action responses are streamed as text/x-component lines
-        # like `0:{...}` and `1:{...}`. The data payload we want is the JSON
-        # block on the `1:` line.
-        if not line.startswith("1:"):
-            continue
-        payload = line[2:].strip()
-        if not payload:
-            continue
-        try:
-            return json.loads(payload)
-        except json.JSONDecodeError:
+def _parse_next_component_stream(text: str) -> dict[int, Any] | None:
+    """Parse a text/x-component response into indexed chunks.
+
+    USCIS component responses are compacted onto a mostly single-line stream:
+    `0:{...}\n2:T...3:T...1:{...}`. We decode the index prefix, parse `T` text
+    records by their byte length, and JSON-decode the remaining records.
+    """
+
+    raw = text.encode("utf-8")
+    pos = 0
+    records: dict[int, Any] = {}
+    saw_record = False
+    decoder = json.JSONDecoder()
+
+    while pos < len(raw):
+        while pos < len(raw) and raw[pos] in b" \t\r\n":
+            pos += 1
+        if pos >= len(raw):
+            break
+
+        match = re.match(rb"(\d+):", raw[pos:])
+        if match is None:
+            if saw_record:
+                raise RuntimeError(
+                    "Unexpected content in Next.js component stream near "
+                    f"byte {pos}: {raw[pos:pos+80]!r}"
+                )
+            return None
+
+        saw_record = True
+        index = int(match.group(1))
+        pos += match.end()
+
+        if pos < len(raw) and raw[pos:pos + 1] == b"T":
+            comma = raw.find(b",", pos)
+            if comma == -1:
+                raise RuntimeError(f"Malformed T record in Next.js component stream at byte {pos}")
+            text_length = int(raw[pos + 1:comma], 16)
+            start = comma + 1
+            end = start + text_length
+            if end > len(raw):
+                raise RuntimeError(f"Truncated T record in Next.js component stream at byte {pos}")
+            records[index] = raw[start:end].decode("utf-8")
+            pos = end
             continue
 
-    # Some responses glue the `1:` payload onto the end of the previous line
-    # instead of emitting it on its own line. Recover that tail payload too.
-    glued_match = re.search(r"(?:^|[\r\n])?[^0-9]*1:(\{.*\})\s*$", text, re.DOTALL)
-    if glued_match:
-        payload = glued_match.group(1).strip()
-        if payload:
-            try:
-                return json.loads(payload)
-            except json.JSONDecodeError:
-                pass
-    return None
+        remainder = raw[pos:].decode("utf-8")
+        try:
+            value, consumed_chars = decoder.raw_decode(remainder)
+        except json.JSONDecodeError as exc:
+            raise RuntimeError(
+                f"Malformed JSON record in Next.js component stream at byte {pos}"
+            ) from exc
+        records[index] = value
+        pos += len(remainder[:consumed_chars].encode("utf-8"))
+
+    return records if saw_record else None
+
+
+def _resolve_component_references(records: dict[int, Any]) -> dict[int, Any]:
+    ref_pattern = re.compile(r"^\$(\d+)$")
+
+    @lru_cache(maxsize=None)
+    def resolve_index(index: int) -> Any:
+        if index not in records:
+            raise KeyError(f"Component stream referenced missing record ${index}")
+        return resolve_value(records[index])
+
+    def resolve_value(value: Any) -> Any:
+        if isinstance(value, str):
+            match = ref_pattern.fullmatch(value)
+            if match is not None:
+                return resolve_index(int(match.group(1)))
+            return value
+        if isinstance(value, list):
+            return [resolve_value(item) for item in value]
+        if isinstance(value, dict):
+            return {key: resolve_value(item) for key, item in value.items()}
+        return value
+
+    return {index: resolve_value(value) for index, value in records.items()}
+
+
+def _load_next_component_payload(text: str) -> Any | None:
+    records = _parse_next_component_stream(text)
+    if records is None:
+        return None
+    return _resolve_component_references(records)
 
 
 def _serializable_root(value: Any) -> Any:
@@ -130,16 +193,28 @@ def normalize_file(path: Path) -> bool:
         # Keep already-JSON responses untouched so existing behavior is preserved.
         return False
 
-    component_payload = _load_next_component_payload(original)
-    if isinstance(component_payload, dict):
-        path.write_text(json.dumps(component_payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-        return True
-
     target = _target_from_name(path)
     if target is None:
         raise ValueError(f"Can't infer a Next.js payload target from {path.name!r}")
 
     candidate_paths = TARGET_PATHS[target]
+
+    component_payload = _load_next_component_payload(original)
+    if isinstance(component_payload, dict):
+        record_payload = component_payload.get(1)
+        if isinstance(record_payload, dict):
+            path.write_text(
+                json.dumps(record_payload, ensure_ascii=False, separators=(",", ":")) + "\n",
+                encoding="utf-8",
+            )
+            return True
+
+        match = _find_matching_dict(component_payload, candidate_paths)
+        if match is not None:
+            payload, path_match = match
+            normalized = _wrap_for_sql(payload, path_match)
+            path.write_text(json.dumps(normalized, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+            return True
 
     # Fast path: __NEXT_DATA__ payloads already parse directly.
     next_data = njsparser.get_next_data(original)
