@@ -6,11 +6,12 @@ set -euxo pipefail
 
 # install zerobrew
 curl -fsSL https://zerobrew.rs/install | bash
-zb install sqldiff sqlite # -> bugged in zb
+zb install sqldiff sqlite uv
 # pick up zb bin folder
 export PATH="$HOME/.zerobrew/bin:$HOME/.local/share/zerobrew/prefix/bin:$PATH"
 
 # Check for required commands
+command -v uv > /dev/null
 command -v sqldiff > /dev/null
 command -v sqlite3 > /dev/null
 
@@ -19,6 +20,22 @@ command -v sqlite3 > /dev/null
 
 # populate CF cookies (EGOV)
 ./populate_cookies.sh "https://egov.uscis.gov/processing-times/"
+
+# cache Next.js action ids once for the whole build
+cache_next_action_id() {
+    local action_name="$1"
+    local cache_var="NEXT_ACTION_ID_$(printf '%s' "$action_name" | tr '[:lower:]' '[:upper:]' | tr -cd 'A-Z0-9')"
+    local action_id
+
+    action_id="$(uv run ./resolve_next_action_id.py "$action_name")"
+    printf -v "$cache_var" '%s' "$action_id"
+    export "$cache_var"
+}
+
+cache_next_action_id getFormNumbers
+cache_next_action_id getFormCategories
+cache_next_action_id getOfficesScs
+cache_next_action_id getProcessingTime
 
 # forms
 ./populate_forms.sh
