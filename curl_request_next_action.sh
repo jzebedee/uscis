@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-ACTION_ID="${1:?usage: curl_request_next_action.sh ACTION_ID [ARGS...] -o OUTPUT_FILE}"
+ACTION_NAME="${1:?usage: curl_request_next_action.sh ACTION_NAME [ARGS...] -o OUTPUT_FILE}"
 shift
 
 OUTPUT_FILE=""
@@ -28,6 +28,8 @@ if [ -z "$OUTPUT_FILE" ]; then
   echo "missing -o OUTPUT_FILE" >&2
   exit 2
 fi
+
+ACTION_ID="$(uv run ./resolve_next_action_id.py "$ACTION_NAME")"
 
 JSON_ARGS="$(python3 - "${ARGS[@]}" <<'PY'
 import json
