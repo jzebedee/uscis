@@ -14,6 +14,7 @@ expect. Plain JSON responses are left untouched.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from collections import deque
 from pathlib import Path
@@ -98,6 +99,17 @@ def _load_next_component_payload(text: str) -> Any | None:
             return json.loads(payload)
         except json.JSONDecodeError:
             continue
+
+    # Some responses glue the `1:` payload onto the end of the previous line
+    # instead of emitting it on its own line. Recover that tail payload too.
+    glued_match = re.search(r"(?:^|[\r\n])?[^0-9]*1:(\{.*\})\s*$", text, re.DOTALL)
+    if glued_match:
+        payload = glued_match.group(1).strip()
+        if payload:
+            try:
+                return json.loads(payload)
+            except json.JSONDecodeError:
+                pass
     return None
 
 

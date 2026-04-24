@@ -35,10 +35,6 @@ def fetch_with_cookie_refresh(url: str) -> str:
 
     for attempt in range(2):
         proc = run_command(["./curl_request.sh", url])
-        if proc.returncode != 0:
-            raise SystemExit(
-                f"failed to fetch {url}:\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
-            )
 
         body = proc.stdout
         if any(pattern in body for pattern in ACTION_BLOCK_PATTERNS):
@@ -54,6 +50,11 @@ def fetch_with_cookie_refresh(url: str) -> str:
                     f"failed to refresh cookies for {url}:\nstdout:\n{refresh.stdout}\nstderr:\n{refresh.stderr}"
                 )
             continue
+
+        if proc.returncode != 0:
+            raise SystemExit(
+                f"failed to fetch {url}:\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+            )
 
         return body
 
