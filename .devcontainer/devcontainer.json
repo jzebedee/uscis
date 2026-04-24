@@ -6,16 +6,15 @@
 	"image": "mcr.microsoft.com/devcontainers/base:noble",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	"features": {
-		"ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {}
-	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"GitHub.vscode-github-actions"
 			]
 		}
-	}
+	},
+
+	"postAttachCommand": ".devcontainer/setup.sh"
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],

@@ -1,18 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euxo pipefail
 
 # install dependencies
 ./install_deps.sh
 
-# install homebrew dependencies
-# https://docs.brew.sh/Homebrew-on-Linux#install
-test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
-echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
-
-brew update
-brew install sqlite sqldiff
+# install zerobrew
+curl -fsSL https://zerobrew.rs/install | bash
+zb install sqldiff sqlite # -> bugged in zb
+# pick up zb bin folder
+export PATH="$HOME/.zerobrew/bin:$HOME/.local/share/zerobrew/prefix/bin:$PATH"
 
 # Check for required commands
 command -v sqldiff > /dev/null
