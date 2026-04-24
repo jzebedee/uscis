@@ -6,11 +6,12 @@ set -euxo pipefail
 
 # install zerobrew
 curl -fsSL https://zerobrew.rs/install | bash
-zb install sqldiff sqlite # -> bugged in zb
+zb install sqldiff sqlite uv
 # pick up zb bin folder
 export PATH="$HOME/.zerobrew/bin:$HOME/.local/share/zerobrew/prefix/bin:$PATH"
 
 # Check for required commands
+command -v uv > /dev/null
 command -v sqldiff > /dev/null
 command -v sqlite3 > /dev/null
 
