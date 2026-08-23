@@ -9,20 +9,18 @@ with open(sys.argv[1], 'r') as file:
 # Parse JSON
 payload = json.loads(json_data)
 
-if isinstance(payload, dict) and isinstance(payload.get("cookies"), dict):
-    if len(sys.argv) < 3:
-        raise SystemExit("target URL is required for cookie responses without domain metadata")
-    target = urlparse(sys.argv[2])
-    if not target.hostname:
-        raise SystemExit(f"invalid target URL: {sys.argv[2]}")
-    cookies = [
-        {"domain": target.hostname, "name": name, "value": value}
-        for name, value in payload["cookies"].items()
-    ]
-elif isinstance(payload, list):
-    cookies = payload
-else:
+if not isinstance(payload, dict) or not isinstance(payload.get("cookies"), dict):
     raise SystemExit("unsupported stealth cookie response")
+
+if len(sys.argv) < 3:
+    raise SystemExit("target URL is required for cookie responses without domain metadata")
+target = urlparse(sys.argv[2])
+if not target.hostname:
+    raise SystemExit(f"invalid target URL: {sys.argv[2]}")
+cookies = [
+    {"domain": target.hostname, "name": name, "value": value}
+    for name, value in payload["cookies"].items()
+]
 
 # Netscape cookies format header
 netscape_cookies = "# Netscape HTTP Cookie File\n"
