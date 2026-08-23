@@ -367,3 +367,5 @@ _examine/
 dbs/
 pub/
 prev/
+uscis.cookies
+uscis.user-agent

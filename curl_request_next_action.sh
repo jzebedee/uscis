@@ -52,7 +52,7 @@ request_once() {
   body_file="$(mktemp)"
 
   set +e
-  curl_chrome132 \
+  curl_chrome_uscis \
     -sS \
     --fail-with-body \
     -D "$headers_file" \

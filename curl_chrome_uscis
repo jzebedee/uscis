@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BIN_DIR="${CURL_IMPERSONATE_BIN_DIR:-/usr/bin}"
+UA_FILE="${STEALTH_UA_FILE:-uscis.user-agent}"
+USER_AGENT="${STEALTH_USER_AGENT:-}"
+
+if [[ -n "${STEALTH:-}" && "${CURL_CHROME_SKIP_UA:-0}" != "1" && -z "$USER_AGENT" && -r "$UA_FILE" ]]; then
+    IFS= read -r USER_AGENT < "$UA_FILE" || true
+fi
+
+requested_version=""
+if [[ "$USER_AGENT" =~ Chrome/([0-9]+) ]]; then
+    requested_version="${BASH_REMATCH[1]}"
+fi
+
+selected_path=""
+selected_version=-1
+lowest_path=""
+lowest_version=999999
+
+for candidate in "$BIN_DIR"/curl_chrome[0-9]*; do
+    [[ -x "$candidate" ]] || continue
+    candidate_name="${candidate##*/}"
+    candidate_version="${candidate_name#curl_chrome}"
+    [[ "$candidate_version" =~ ^[0-9]+$ ]] || continue
+
+    if (( candidate_version < lowest_version )); then
+        lowest_version="$candidate_version"
+        lowest_path="$candidate"
+    fi
+
+    if [[ -z "$requested_version" ]]; then
+        if (( candidate_version > selected_version )); then
+            selected_version="$candidate_version"
+            selected_path="$candidate"
+        fi
+    elif (( candidate_version <= requested_version && candidate_version > selected_version )); then
+        selected_version="$candidate_version"
+        selected_path="$candidate"
+    fi
+done
+
+if [[ -z "$selected_path" ]]; then
+    selected_path="$lowest_path"
+    selected_version="$lowest_version"
+fi
+
+if [[ -z "$selected_path" ]]; then
+    echo "No installed curl_chromeNN wrapper found in $BIN_DIR" >&2
+    exit 1
+fi
+
+if [[ -n "$USER_AGENT" ]]; then
+    echo "Using $selected_path with stealth user agent: $USER_AGENT" >&2
+    exec "$selected_path" "$@" -A "$USER_AGENT"
+fi
+
+echo "Using $selected_path" >&2
+exec "$selected_path" "$@"
