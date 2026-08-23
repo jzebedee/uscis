@@ -2,7 +2,7 @@ all:
 	./build_db.sh
 
 clean:
-	rm -f *.json *.db *.cookies sqldiff.txt changelog.txt
+	rm -f *.json *.db *.cookies uscis.user-agent sqldiff.txt changelog.txt
 
 publish:
 	mv prev/*.db prev/old.db.bak
