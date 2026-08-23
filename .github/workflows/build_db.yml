@@ -82,13 +82,13 @@ jobs:
       id: dbname
       run: echo "dbname=$(basename *.db .db)" >> $GITHUB_OUTPUT
     - name: Upload DB
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v7
       with:
         name: uscis-db
         path: '${{ steps.dbname.outputs.dbname }}.db'
         if-no-files-found: error
     - name: Upload changelog
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v7
       with:
         name: changelog
         path: |
@@ -99,7 +99,7 @@ jobs:
       if: always()
       run: sqlite3 responses.db -A -c *.json *.cookies
     - name: Upload JSON DB
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v7
       if: always()
       with:
         name: responses-db
