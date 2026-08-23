@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-#
-# /// script
-# requires-python = ">=3.12"
-# dependencies = ["njsparser"]
-# ///
+#!/usr/bin/env -S uv run --locked
 """Normalize USCIS responses that now arrive as Next.js HTML shells or server actions.
 
 This helper keeps the existing SQLite parsing path intact by converting

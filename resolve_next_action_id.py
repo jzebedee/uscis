@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --locked
 """Resolve a Next.js server-action id from the live USCIS page bundle."""
 
 from __future__ import annotations

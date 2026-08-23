@@ -32,7 +32,7 @@ fi
 cache_var="NEXT_ACTION_ID_$(printf '%s' "$ACTION_NAME" | tr '[:lower:]' '[:upper:]' | tr -cd 'A-Z0-9')"
 ACTION_ID="${!cache_var:-}"
 if [ -z "$ACTION_ID" ]; then
-  ACTION_ID="$(uv run ./resolve_next_action_id.py "$ACTION_NAME")"
+  ACTION_ID="$(./resolve_next_action_id.py "$ACTION_NAME")"
 fi
 
 JSON_ARGS="$(python3 ./json_args.py "${ARGS[@]}")"

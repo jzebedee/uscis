@@ -27,7 +27,7 @@ cache_next_action_id() {
     local cache_var="NEXT_ACTION_ID_$(printf '%s' "$action_name" | tr '[:lower:]' '[:upper:]' | tr -cd 'A-Z0-9')"
     local action_id
 
-    action_id="$(uv run ./resolve_next_action_id.py "$action_name")"
+    action_id="$(./resolve_next_action_id.py "$action_name")"
     printf -v "$cache_var" '%s' "$action_id"
     export "$cache_var"
 }
