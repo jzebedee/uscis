@@ -14,7 +14,7 @@ jobs:
       TS_EXIT_NODE_IP: ${{ steps.get_exit_node_ip.outputs.TS_EXIT_NODE_IP }}
     steps:
     - name: Connect to stealthnet
-      uses: tailscale/github-action@v3
+      uses: tailscale/github-action@v4
       with:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
@@ -38,7 +38,7 @@ jobs:
     - name: Show IP before Tailscale
       run: ./curl_request_api.sh ${{ env.IPTEST_URL }}
     - name: Connect to stealthnet
-      uses: tailscale/github-action@v3
+      uses: tailscale/github-action@v4
       with:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
@@ -61,7 +61,7 @@ jobs:
     - name: Show IP before Tailscale
       run: ./curl_request_api.sh ${{ env.IPTEST_URL }}
     - name: Connect to stealthnet (exit node)
-      uses: tailscale/github-action@v3
+      uses: tailscale/github-action@v4
       with:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
