@@ -111,7 +111,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     steps:
       - name: Download DB
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
       - name: Create daily release
         uses: softprops/action-gh-release@v2
         with:
