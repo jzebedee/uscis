@@ -35,13 +35,7 @@ if [ -z "$ACTION_ID" ]; then
   ACTION_ID="$(uv run ./resolve_next_action_id.py "$ACTION_NAME")"
 fi
 
-JSON_ARGS="$(python3 - "${ARGS[@]}" <<'PY'
-import json
-import sys
-
-print(json.dumps(sys.argv[1:], ensure_ascii=False))
-PY
-)"
+JSON_ARGS="$(python3 ./json_args.py "${ARGS[@]}")"
 
 REQUEST_URL="https://egov.uscis.gov/processing-times"
 REFERER_HEADER="Referer: https://egov.uscis.gov/processing-times"

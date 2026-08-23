@@ -32,32 +32,7 @@ curl --fail --silent --show-error --location \
     --output "$RELEASE_JSON" "$RELEASE_API"
 
 IFS=$'\t' read -r CURL_VERSION CURL_URL CURL_DIGEST < <(
-    python3 - "$RELEASE_JSON" "$ASSET_PLATFORM" <<'PY'
-import json
-import sys
-
-release_path, platform = sys.argv[1:]
-with open(release_path, encoding="utf-8") as file:
-    release = json.load(file)
-
-asset = next(
-    (
-        asset
-        for asset in release.get("assets", [])
-        if asset.get("name", "").startswith("curl-impersonate-")
-        and asset.get("name", "").endswith(f".{platform}.tar.gz")
-    ),
-    None,
-)
-if asset is None:
-    raise SystemExit(f"No curl-impersonate asset found for {platform}")
-
-digest = asset.get("digest", "")
-if not digest.startswith("sha256:"):
-    raise SystemExit(f"Latest release asset has no SHA-256 digest: {asset['name']}")
-
-print("\t".join((release["tag_name"], asset["browser_download_url"], digest[7:])))
-PY
+    python3 "$SCRIPT_DIR/select_curl_release.py" "$RELEASE_JSON" "$ASSET_PLATFORM"
 )
 
 curl --fail --silent --show-error --location \
