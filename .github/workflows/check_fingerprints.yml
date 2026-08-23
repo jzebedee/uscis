@@ -32,7 +32,7 @@ jobs:
   get_direct_hash:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Install cURL scripts
       run: ./install_curl.sh
     - name: Show IP before Tailscale
@@ -55,7 +55,7 @@ jobs:
     env:
       TS_EXIT_NODE_IP: ${{ needs.get_exit_node_ip.outputs.TS_EXIT_NODE_IP }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Install cURL scripts
       run: ./install_curl.sh
     - name: Show IP before Tailscale
