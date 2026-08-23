@@ -67,7 +67,7 @@ sqldiff prev/*.db *.db > sqldiff.txt
 # generate changelog
 sqldiff=$(<sqldiff.txt)
 max_diff_length=124000
-if [ $(wc -c <<< $sqldiff) -gt $max_diff_length ]
+if [ "$(wc -c < sqldiff.txt)" -gt "$max_diff_length" ]
 then
     printf -v sqldiff '%.*s...\n\nTruncated for length' $max_diff_length "$(<sqldiff.txt)"
 fi
