@@ -41,7 +41,7 @@ jobs:
     outputs:
       dbname: ${{ steps.dbname.outputs.dbname }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - name: Download previous DB
       uses: robinraju/release-downloader@v1
       with:
